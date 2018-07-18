@@ -29,10 +29,9 @@ router.get('/', function(req,res){
 });
 
 // GET /show/:id
-router.get('/show', auth, function(req,res){
+router.get('/show', function(req,res){
+    var query = Post.findOne({_id: req.query.id});
 
-    var query = Post.findByOne({_id: req.query.id});
-    
     query.exec(function(err,item){
         if(err){
             res.send({msg:err})
@@ -56,6 +55,7 @@ router.get('/home_timeline', auth, function(req,res){
                 res.send({msg:err})
             }
             else{
+                console.log(item);
                 res.status(200).json(item);
             }
         });
@@ -68,9 +68,9 @@ router.get('/home_timeline', auth, function(req,res){
 });
 
 // GET /user_timeline
-router.get('/user_timeline', auth, function(req,res){
-    var query = Post.find({author: req.query.screen_name.toLowerCase()});
-    
+router.get('/user_timeline', function(req,res){
+    var query = Post.find({authorId: req.query.id.toLowerCase()});
+    query.select('_id');
     query.exec(function(err,item){
         if(err){
             res.send({msg:err})
@@ -86,17 +86,17 @@ router.post('/update', auth, function(req,res){
     console.log("the payload: ");
     console.log(req.payload);
     const newPost = new Post({
-    content: req.body.content,
-    author: req.payload._id,
-    authorId: req.payload._id,
-    postDate: new Date(),
-    commentList: [],
-    repostList: [],
-    mentions: [],
-    hashtags: [],
-    media: [],
-    likeCount: 0,
-    repostCount: 0,
+        content: req.body.content,
+        author: req.payload.username,
+        authorId: req.payload._id,
+        postDate: Date.now(),
+        commentList: [],
+        repostList: [],
+        mentions: [],
+        hashtags: [],
+        media: [],
+        likeCount: 0,
+        repostCount: 0,
     });
 
     console.log(req.body);

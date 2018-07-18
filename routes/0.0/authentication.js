@@ -13,7 +13,7 @@ router.post('/register', function(req, res){
     user.lastname = req.body.lastname;
     user.email = req.body.email;
     user.username = req.body.username;
-    user.handle = req.body.handle;
+    user.handle = req.body.username;
   
     if(req.body.password!==req.body.passwordretype){
       res.status(401).json({message:'passwords do not match'});
@@ -34,7 +34,9 @@ router.post('/register', function(req, res){
         token = user.generateJwt();
         res.status(200);
         res.json({
-        "token" : token
+        "token" : token,
+        "userId": user._id,
+        "userHandle":user.handle
       });
       }
       
@@ -43,6 +45,10 @@ router.post('/register', function(req, res){
 
 
 router.post('/signin',function(req, res) {
+
+  // TODO: Handle signin post when user already signed in
+
+  
     console.log('signing in');
     console.log(req.body);
     passport.authenticate('local', function(err, user, info){
@@ -61,19 +67,25 @@ router.post('/signin',function(req, res) {
         console.log('user found');
         // console.log(user);
         token = user.generateJwt();
-        res.status(200);
-        res.send({
+        res.status(200).json({
           "token" : token,
-          "userId": user._id
+          "userId": user._id,
+          "userHandle":user.handle
         });
       } else {
         // If user is not found
         console.log('user not found');
-        res.status(500).json(info);
+        return res.status(400);
       }
     })(req, res);
   
   });
+
+
+
+  // isSignedIn(req, res, next){
+  //   if()
+  // }
 
 
 

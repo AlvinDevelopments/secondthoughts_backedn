@@ -22,10 +22,11 @@ router.get('/lookup/:id',function(req,res){
   query.exec(function(err,item){
     if(err){
       res.send({
-        msg:error
+        msg:err
       });
     }
     else{
+      console.log('sending');
       res.status(200).json(item);
     }
   });
@@ -43,13 +44,12 @@ router.get('/lookup_name/:name',function(req,res){
         msg:error
       });
     }
-    else{
-      if(item!==null){
-        console.log('the id is: '+item._id);
-        res.status(200).json(item);
-      }
+    else if(item===null){
       console.log("CANNOT FIND");
-      return res.status(404);
+      return res.status(404).json('cannot find');
+    }
+    else{
+      return res.status(200).json(item);
     }
   });
 });
@@ -98,11 +98,13 @@ router.get('/search/:term',function(req,res){
 router.post('/',function(req,res){
   // create user
   // this has been implemented under the authentication route
-
 });
 
 // PATCH follow
 
+
+// FOLLOW user
+router.patch('/')
 
 
 
