@@ -12,7 +12,11 @@ let followerSchema = new mongoose.Schema({
     followerList: {
         type: Array
     },
-})
+    followerCount: {
+        type: Number,
+        required: true
+    }
+});
 
 let Follower = mongoose.model('followers',followerSchema);
 module.exports = Follower;

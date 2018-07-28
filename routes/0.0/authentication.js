@@ -1,19 +1,28 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
-var User = require('../../models/User');
+
 var passport = require('passport');
+
+var User = require('../../models/User');
+var Friend = require('../../models/Friend');
+var Follower = require('../../models/Follower');
+var Favorite = require('../../models/Favorite');
+// var Timeline  = require('../../models/Timeline');
 
 
 router.post('/register', function(req, res){
     console.log('signing up');
     var user = new User();
     console.log(req.body);
+    user.username = req.body.username;
     user.firstname = req.body.firstname;
     user.lastname = req.body.lastname;
-    user.email = req.body.email;
-    user.username = req.body.username;
+    user.bio = '';
     user.handle = req.body.username;
+    user.email = req.body.email;
+    user.joinDate = Date.now();
+    user.location = '';
   
     if(req.body.password!==req.body.passwordretype){
       res.status(401).json({message:'passwords do not match'});
@@ -30,6 +39,63 @@ router.post('/register', function(req, res){
         });
       }
       else{
+
+        // Create followers table
+        var followTable = new Follower();
+        followTable.userId = user._id;
+        followTable.followList = [user._id];
+        followTable.followerCount = 0;
+
+        followTable.save(function(err){
+          if(err){
+            res.status(500).json({
+              "msg":err
+            });
+          }
+        });
+
+        // Create friends table
+        var friendTable = new Friend();
+        friendTable.userId = user._id;
+        friendTable.friendList = [user._id];
+        friendTable.friendCount = 0;
+
+        friendTable.save(function(err){
+          if(err){
+            res.status(500).json({
+              "msg":err
+            });
+          }
+        });
+
+        // Create favorites table
+        var favoriteTable = new Favorite();
+        favoriteTable.userId = user._id;
+        favoriteTable.favoriteList = [];
+
+        favoriteTable.save(function(err){
+          if(err){
+            res.status(500).json({
+              "msg":err
+            });
+          }
+        });
+
+        // // Create timeline for new user
+        // var timelineTable = new Timeline();
+        // timelineTable.userId = user._id;
+        // timelineTable.timeline = [];
+
+        // timelineTable.save(function(err){
+        //   if(err){
+        //     res.status(500).json({
+        //       "msg":err
+        //     });
+        //   }
+        // });
+
+
+
         var token;
         token = user.generateJwt();
         res.status(200);
@@ -75,7 +141,8 @@ router.post('/signin',function(req, res) {
       } else {
         // If user is not found
         console.log('user not found');
-        return res.status(400);
+        res.status(400,'gg');
+        res.send({"msg":"FUCK"});
       }
     })(req, res);
   

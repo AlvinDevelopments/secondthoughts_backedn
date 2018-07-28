@@ -1,8 +1,24 @@
-var express = require('express');
-var router = express.Router();
 var mongoose = require('mongoose');
-var User = require('../../models/User');
-var Follower = require('../../models/Follower');
+var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
 
 
-module.exports = router;
+let friendSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    friendList: {
+        type: Array
+    },
+    friendCount: {
+        type: Number,
+        required: true
+    }
+});
+
+
+
+let Friend = mongoose.model('friends',friendSchema);
+module.exports = Friend;

@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('secondthoughts-backend:server');
 var http = require('http');
 
+const socketIO = require('socket.io');
+
 /**
  * Get port from environment and store in Express.
  */
@@ -20,6 +22,28 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+
+/**
+ * Create Socket.io Server 
+ * 
+ */
+
+ const io = socketIO(server);
+
+ io.on('connection', socket=>{
+  console.log('A User has connected.');
+
+
+  socket.on('favorite created', ()=>{
+    console.log('A user has favorited a post.');
+  });
+
+  socket.on('disconnect',()=>{
+    console.log('the User has disconnected');
+
+  });
+ });
 
 /**
  * Listen on provided port, on all network interfaces.

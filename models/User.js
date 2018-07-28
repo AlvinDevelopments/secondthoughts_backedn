@@ -24,20 +24,20 @@ var userSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
-    followingList:{
-      type: Array
-    },
     email:{
       type: String,
       unique: true,
       required: true,
     },
-    favList:{
-      type:Array,
+    joinDate:{
+      type: Date,
+      required: true
     },
-    timeline:{
-        type: Array,
-    },
+    location: String,
+    postCount: String,
+    followerCount:String,
+    followingCount:String,
+    likeCount:String,
     hash: String, // the encrypted password
     salt: String,
 });
@@ -60,6 +60,7 @@ userSchema.methods.generateJwt = function() {
     _id: this._id,
     email: this.email,
     username: this.username,
+    handle: this.handle,
     firstname: this.name,
     lastname:this.name,
     favList:this.favList,

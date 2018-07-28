@@ -1,27 +1,37 @@
 var mongoose = require('mongoose');
 
-
 var postSchema = new mongoose.Schema({
     content: {
         type: String,
+        required: true
     },
-    author: {
+    type: {
+        type: String,
+        enum: ['POST','REPLY','REPOST','SHARE'],
+        default: 'POST',
+        required: true
+    },
+    parent: {
         type: String,
     },
-    authorId:{
+    author:{
+        type: String,
+        required: true
+    },
+    authorId: {
         type: String,
     },
     postDate: {
         type: Date,
     },
-    commentList:{
-        Type: Array,
-    },
-    likedList:{
-
+    favoriteList:{
+        type: Array,
     },
     repostList:{
-
+        type:[String]
+    },
+    commentList:{
+        type:[String]
     },
     mentions: {
         type: Array
@@ -29,13 +39,10 @@ var postSchema = new mongoose.Schema({
     hashtags:{
         type: Array,
     },
-    media: {
-        type: Array
-    },
     likeCount: Number,
     repostCount: Number,
+    commentCount: Number,
 });
-
 
 var Post = mongoose.model('posts',postSchema);
 

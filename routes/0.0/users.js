@@ -3,19 +3,14 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../../models/User');
 
-router.get('/',function(req,res){
-  res.send('hello this is users.js');
-});
-
+// list users
 router.get('/lookup',function(req,res){
   res.send('hello this is users.js');
-  // list users
+  
 });
 
+// get user by id
 router.get('/lookup/:id',function(req,res){
-  // res.send('hello this is users.js');
-  // list user of id
-
   var query = User.findOne({"_id":req.params.id});
   query.select("handle _id bio firstname lastname");
 
@@ -32,9 +27,9 @@ router.get('/lookup/:id',function(req,res){
   });
 });
 
+// get user by handle name
 router.get('/lookup_name/:name',function(req,res){
-  // res.send('hello this is users.js');
-  // list user of id
+  
   var query = User.findOne({"handle":req.params.name});
   query.select("handle _id bio firstname lastname");
 
@@ -54,58 +49,47 @@ router.get('/lookup_name/:name',function(req,res){
   });
 });
 
+// edit user of :id
 router.patch('/lookup/:id',function(req,res){
   res.send('hello this is users.js');
   //  edit user of id
 });
 
-router.post('/lookup/:id',function(req,res){
+// delete user of id
+router.delete('/lookup/:id',function(req,res){
   res.send('hello this is users.js');
-  // delete user of id
-});
-
-router.get('/lookup/:id/followers/ids',function(req,res){
-  res.send('hello this is users.js followers');
-  // list followers ids of user id
-});
-
-router.get('/lookup/:id/followers/lists',function(req,res){
-  res.send('hello this is users.js');
-  // list followers objects of user id
-});
-
-router.get('/lookup/:id/followings/ids',function(req,res){
-  res.send('hello this is users.js');
-  // list following ids of user id
-});
-
-router.get('/lookup/:id/followings/lists',function(req,res){
-  res.send('hello this is users.js');
-  // list followings objects of user id
-});
-
-router.get('/lookup/:id/posts',function(req,res){
-  res.send('hello this is users.js');
-  // lists posts of user id
-});
-
-router.get('/search/:term',function(req,res){
-  res.send('hello this is users.js');
-  // list users who match the specified term
   
 });
 
-router.post('/',function(req,res){
-  // create user
-  // this has been implemented under the authentication route
+// list followers ids of user id
+router.get('/lookup/:id/followers/ids',function(req,res){
+  res.send('hello this is users.js followers');
 });
 
-// PATCH follow
+// list followers objects of user id
+router.get('/lookup/:id/followers/list',function(req,res){
+  res.send('hello this is users.js');
+});
 
+ // list following ids of user id 
+router.get('/lookup/:id/followings/ids',function(req,res){
+  res.send('hello this is users.js');
+});
 
-// FOLLOW user
-router.patch('/')
+// list followings objects of user id
+router.get('/lookup/:id/followings/lists',function(req,res){
+  res.send('hello this is users.js');
+});
 
+// list users who match the specified term
+router.get('/search/:term',function(req,res){
+  res.send('hello this is users.js');
+});
 
+ // create user
+// this has been implemented under the authentication route
+router.post('/',function(req,res){
+ 
+});
 
 module.exports = router;
