@@ -2,6 +2,11 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
+const Post = require('./Post');
+const Friend = require('./Friend');
+const Follower = require('./Follower');
+const Favorite = require('./Favorite');
+
 var userSchema = new mongoose.Schema({
     username: {
       type: String,
@@ -36,7 +41,7 @@ var userSchema = new mongoose.Schema({
     location: String,
     postCount: String,
     followerCount:String,
-    followingCount:String,
+    friendCount:String,
     likeCount:String,
     hash: String, // the encrypted password
     salt: String,
@@ -50,6 +55,42 @@ userSchema.methods.setPassword = function(password){
 userSchema.methods.validPassword = function(password) {
   var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
   return this.hash === hash;
+};
+
+userSchema.methods.updateCount = function(){
+
+  // let user = this;
+  console.log('updating counts');
+  console.log(`User ID is ${this._id}`);
+  Post.count({authorId: this._id},(err,item)=>{
+    this.postCount = item;
+    this.save();
+  });
+
+  Follower.findOne({userId: this._id},(err,item)=>{
+    console.log('the returned follower item');
+    console.log(item);
+    if(item===null){
+      return;
+    }
+    else{
+      this.followerCount = item.followerList.length;
+      this.save();
+    }
+  });
+
+  Friend.findOne({userId: this._id},(err,item)=>{
+    console.log(`friend count is ${item.friendList.length}`);
+    this.friendCount = item.friendList.length;
+    this.save();
+  });
+
+  Favorite.findOne({userId: this._id},(err,item)=>{
+    this.likeCount = item.favoriteList.length;
+    this.save();
+  });
+
+  
 };
 
 userSchema.methods.generateJwt = function() {

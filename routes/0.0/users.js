@@ -11,42 +11,53 @@ router.get('/lookup',function(req,res){
 
 // get user by id
 router.get('/lookup/:id',function(req,res){
-  var query = User.findOne({"_id":req.params.id});
-  query.select("handle _id bio firstname lastname");
+  var query = User.findOne({"_id":req.params.id},function(err,item){
+    if(!err)
+    {
+      // console.log(item);
+      item.updateCount();
 
-  query.exec(function(err,item){
-    if(err){
-      res.send({
-        msg:err
-      });
-    }
-    else{
-      console.log('sending');
-      res.status(200).json(item);
+      if(err){
+        res.send({
+          msg:err
+        });
+      }
+      else{
+        console.log('sending');
+        res.status(200).json(item);
+      }
     }
   });
+  // query.select("handle _id bio firstname lastname");
 });
 
 // get user by handle name
 router.get('/lookup_name/:name',function(req,res){
   
-  var query = User.findOne({"handle":req.params.name});
-  query.select("handle _id bio firstname lastname");
+  var query = User.findOne({"handle":req.params.name},function(err,item){
+    if(!err)
+    {
+      console.log(item);
+      item.updateCount();
 
-  query.exec(function(err,item){
-    if(err){
-      res.send({
-        msg:error
-      });
-    }
-    else if(item===null){
-      console.log("CANNOT FIND");
-      return res.status(404).json('cannot find');
-    }
-    else{
-      return res.status(200).json(item);
+      if(err){
+        res.send({
+          msg:error
+        });
+      }
+      else if(item===null){
+        console.log("CANNOT FIND");
+        return res.status(404).json('cannot find');
+      }
+      else{
+        return res.status(200).json(item);
+      }
+
+
     }
   });
+  // query.select("handle _id bio firstname lastname");
+
 });
 
 // edit user of :id
