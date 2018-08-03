@@ -43,6 +43,8 @@ var userSchema = new mongoose.Schema({
     followerCount:String,
     friendCount:String,
     likeCount:String,
+    profileBannerURL: String,
+    profileImageURL: String,
     hash: String, // the encrypted password
     salt: String,
 });
@@ -57,6 +59,43 @@ userSchema.methods.validPassword = function(password) {
   return this.hash === hash;
 };
 
+userSchema.methods.updateFollowerCount = function(){
+  Follower.findOne({userId: this._id},(err,item)=>{
+    console.log('the returned follower item');
+    console.log(item);
+    if(item===null){
+      return;
+    }
+    else{
+      this.followerCount = item.followerList.length;
+      this.save();
+    }
+  });
+
+}
+
+userSchema.methods.updatePostCount = function(){
+  Post.count({authorId: this._id},(err,item)=>{
+    this.postCount = item;
+    this.save();
+  });
+}
+
+userSchema.methods.updateLikeCount = function(){
+  Favorite.findOne({userId: this._id},(err,item)=>{
+    this.likeCount = item.favoriteList.length;
+    this.save();
+  });
+}
+
+userSchema.methods.updateFriendCount = function(){
+  Friend.findOne({userId: this._id},(err,item)=>{
+    console.log(`friend count is ${item.friendList.length}`);
+    this.friendCount = item.friendList.length;
+    this.save();
+  });
+}
+
 userSchema.methods.updateCount = function(){
 
   // let user = this;
@@ -69,7 +108,7 @@ userSchema.methods.updateCount = function(){
 
   Follower.findOne({userId: this._id},(err,item)=>{
     console.log('the returned follower item');
-    console.log(item);
+    // console.log(item);
     if(item===null){
       return;
     }
@@ -90,8 +129,8 @@ userSchema.methods.updateCount = function(){
     this.save();
   });
 
-  
 };
+
 
 userSchema.methods.generateJwt = function() {
   var expiry = new Date();

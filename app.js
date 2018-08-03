@@ -14,6 +14,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://admin:admin123@ds233061.mlab.com:33061/secondthoughts');
 
 require('./config/passport');
+require('./config/cloudinary');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

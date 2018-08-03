@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Follower = require('../../models/Follower');
 var Friend = require('../../models/Friend');
+// var User = require('../../models/User');
 
 router.post('/create', function(req,res){
 

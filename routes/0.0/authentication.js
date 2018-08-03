@@ -23,6 +23,10 @@ router.post('/register', function(req, res){
     user.email = req.body.email;
     user.joinDate = Date.now();
     user.location = '';
+    user.postCount = 0;
+    user.followerCount = 0;
+    user.friendCount = 0;
+    user.lkeCount = 0;
   
     if(req.body.password!==req.body.passwordretype){
       res.status(401).json({message:'passwords do not match'});
@@ -34,6 +38,7 @@ router.post('/register', function(req, res){
     user.save(function(err) {
   
       if(err){
+        console.log('could not save user');
         res.status(500).json({
           "msg":err
         });
@@ -96,10 +101,9 @@ router.post('/register', function(req, res){
 
 
 
-        var token;
-        token = user.generateJwt();
-        res.status(200);
-        res.json({
+        var token = user.generateJwt();
+        console.log(token);
+        res.status(200).json({
         "token" : token,
         "userId": user._id,
         "userHandle":user.handle
@@ -147,13 +151,6 @@ router.post('/signin',function(req, res) {
     })(req, res);
   
   });
-
-
-
-  // isSignedIn(req, res, next){
-  //   if()
-  // }
-
 
 
 

@@ -26,7 +26,7 @@ app.use('/followers',followersRouter);
 app.use('/friends',friendsRouter);
 app.use('/likes',likesRouter);
 app.use('/friendships', auth, friendshipsRouter);
-app.use('/account',accountRouter);
+app.use('/account', auth, accountRouter);
 app.use('/favorites', auth, favoritesRouter);
 
 module.exports = app;
