@@ -11,7 +11,10 @@ var app = express();
 
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://admin:admin123@ds233061.mlab.com:33061/secondthoughts');
+require('dotenv').config();
+
+
+mongoose.connect('mongodb://'+process.env.MONGODB_USERNAME+':'+process.env.MONGODB_PASSWORD+'@ds233061.mlab.com:33061/secondthoughts');
 
 require('./config/passport');
 require('./config/cloudinary');
