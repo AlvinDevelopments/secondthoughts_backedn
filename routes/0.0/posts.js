@@ -185,37 +185,6 @@ router.post('/unrepost/:id', auth, function(req,res){
 
 });
 
-// POST destroy
-router.post('/destroy/:id', auth, function(req,res){
-    console.log('in the unrepost route');
-    console.log("the payload: ");
-    console.log(req.payload);
-
-    var query = Post.findOne({_id:req.params.id});
-
-    query.exec(function(err,item){
-        if(err){
-            console.log('err: ');
-            console.log(err);
-        }
-        else{
-            if(item.authorid!==req.payload._id){
-                return res.sendStatus(400);
-            }
-        }
-    });
-
-    Post.findOneAndDelete(
-        {_id:req.params.id},
-        function(err,item){
-            console.log('successfully deleted!');
-        }
-    );
-
-});
-
-
-
 // POST reply
 router.post('/reply/:id', auth, function(req,res){
 
@@ -291,6 +260,7 @@ router.post('/destroy/:id',function(req,res){
         {_id:req.params.id},
         function(err,result){
             if(err){
+                console.log(err);
                 res.status(400).send({msg:'could not delete...'});
             }
             else{

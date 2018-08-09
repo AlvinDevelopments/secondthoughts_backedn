@@ -33,10 +33,10 @@ router.get('/lookup/:id',function(req,res){
 // get user by handle name
 router.get('/lookup_name/:name',function(req,res){
   
-  var query = User.findOne({"username":req.params.name},'username firstname lastname bio handle email joinDate location postCount followerCount friendCount likeCount profileBannerURL profileImageURL',function(err,item){
-    if(!err)
+  var query = User.findOne({"handle":req.params.name},'username firstname lastname bio handle email joinDate location postCount followerCount friendCount likeCount profileBannerURL profileImageURL',function(err,item){
+    if(!err && item)
     {
-      // console.log(item);
+      console.log(item);
       item.updateCount();
 
       if(err){
